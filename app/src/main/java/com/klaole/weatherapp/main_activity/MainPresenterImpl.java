@@ -36,6 +36,7 @@ public class MainPresenterImpl implements MainContract.Presenter, MainContract.G
     @Override
     public void requestDataFromServer() {
 
+
         getForecastInteractor.getForecastArrayList(this);
     }
 

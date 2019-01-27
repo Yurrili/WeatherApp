@@ -57,9 +57,17 @@ public interface MainContract {
             void onFailedSearch(Throwable t);
         }
 
+        interface OnFinishedForecastListener {
+            void onFinishedForecast(List<ConsolidatedWeather> locationSearch);
+
+            void onFailedForecast(Throwable t);
+        }
+
         void getForecastArrayList(OnFinishedListener onFinishedListener);
 
         void getLocationSearch(String name, OnFinishedSearchListener onFinishedListener);
+
+        void get7daysForecast(int id, List<String> date, OnFinishedForecastListener onFinishedListener);
 
     }
 
