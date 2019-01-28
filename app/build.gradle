@@ -14,7 +14,7 @@ android {
     useLibrary 'android.test.runner'
     defaultConfig {
         applicationId "com.klaole.weatherapp"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"

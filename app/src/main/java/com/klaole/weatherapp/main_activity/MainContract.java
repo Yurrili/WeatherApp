@@ -5,6 +5,7 @@ import com.klaole.weatherapp.models.Forecast;
 import com.klaole.weatherapp.models.LocationSearch;
 
 import java.util.List;
+import java.util.TreeMap;
 
 public interface MainContract {
 
@@ -58,7 +59,7 @@ public interface MainContract {
         }
 
         interface OnFinishedForecastListener {
-            void onFinishedForecast(List<ConsolidatedWeather> locationSearch);
+            void onFinishedForecast(TreeMap<String, ConsolidatedWeather> locationSearch);
 
             void onFailedForecast(Throwable t);
         }
