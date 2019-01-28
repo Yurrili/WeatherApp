@@ -32,7 +32,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
 
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        holder.txtWeatherState.setText(dataList.get(position).getWeatherStateName());
+        holder.txtWeatherState.setText(dataList.get(position).getWeatherStateAbbr());
     }
 
     @Override

@@ -8,11 +8,11 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.klaole.weatherapp.adapter.ForecastAdapter;
+import com.klaole.weatherapp.main_activity.DateProviderImpl;
 import com.klaole.weatherapp.main_activity.GetForecastInteractorImpl;
 import com.klaole.weatherapp.main_activity.MainContract;
 import com.klaole.weatherapp.main_activity.MainPresenterImpl;
 import com.klaole.weatherapp.models.ConsolidatedWeather;
-import com.klaole.weatherapp.models.Forecast;
 
 import java.util.List;
 
@@ -27,16 +27,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     private MainContract.Presenter presenter;
 
-    private static final String TAG = "MainActivity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeRecyclerView();
         initProgressBar();
-        presenter = new MainPresenterImpl(this, new GetForecastInteractorImpl());
-
+        presenter = new MainPresenterImpl(new DateProviderImpl(MainActivity.this), this, new GetForecastInteractorImpl());
+        presenter.requestDataFromServer();
 
     }
 
@@ -83,12 +81,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     @Override
     public void setDataToRecyclerView(List<ConsolidatedWeather> forecasts) {
         ForecastAdapter adapter = new ForecastAdapter(forecasts);
+        recyclerView.setAdapter(adapter);
+        recyclerView.swapAdapter(adapter, true);
     }
 
-    @Override
-    public void setDataToFragment(Forecast forecast) {
-
-    }
 
     @Override
     public void onResponseFailure(Throwable throwable) {

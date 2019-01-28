@@ -9,7 +9,10 @@ import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
-public abstract class WeatherProcessor {
+public class WeatherProcessor {
+
+    private WeatherProcessor() {
+    }
 
     public static ConsolidatedWeather getOneDayForecast(List<ConsolidatedWeather> list) {
 

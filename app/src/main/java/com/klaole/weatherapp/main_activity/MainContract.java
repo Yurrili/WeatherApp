@@ -35,8 +35,6 @@ public interface MainContract {
 
         void setDataToRecyclerView(List<ConsolidatedWeather> forecasts);
 
-        void setDataToFragment(Forecast forecast);
-
         void onResponseFailure(Throwable throwable);
 
     }
