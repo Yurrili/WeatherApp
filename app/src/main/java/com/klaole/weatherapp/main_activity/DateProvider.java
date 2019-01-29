@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface DateProvider {
 
-    String getFormatedTodayDate();
+    String getFormattedTodayDate();
 
     List<String> getListOfDates();
 

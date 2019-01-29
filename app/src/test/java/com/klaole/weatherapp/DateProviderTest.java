@@ -33,8 +33,8 @@ public class DateProviderTest {
     }
 
     @Test
-    public void checkTodaysDateProcessingTest() {
-        String today = dateProvider.getFormatedTodayDate();
+    public void checkTodayDateProcessingTest() {
+        String today = dateProvider.getFormattedTodayDate();
 
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());

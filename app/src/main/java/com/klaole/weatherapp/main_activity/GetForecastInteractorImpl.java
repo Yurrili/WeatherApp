@@ -10,6 +10,7 @@ import com.klaole.weatherapp.network.RetrofitInstance;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
@@ -63,12 +64,14 @@ public class GetForecastInteractorImpl implements MainContract.GetForecastIntera
     }
 
     @Override
-    public void getLocationSearch(String name, final OnFinishedSearchListener onFinishedListener) {
+    public void getLocationSearch(double latitude, double longitude, final OnFinishedSearchListener onFinishedListener) {
 
         /** Create handle for the RetrofitInstance interface*/
         GetForecastDataService service = RetrofitInstance.getRetrofitInstance().create(GetForecastDataService.class);
 
-        Observable<List<LocationSearch>> call = service.getLocationSearch(name);
+        String lattlong = String.format(Locale.getDefault(), "%f,%f", latitude, longitude);
+
+        Observable<List<LocationSearch>> call = service.getLocationSearch(lattlong);
 
         call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -15,7 +15,7 @@ public interface GetForecastDataService {
 
 
     @GET("location/search/")
-    Observable<List<LocationSearch>> getLocationSearch(@Query("query") String name);
+    Observable<List<LocationSearch>> getLocationSearch(@Query("lattlong") String lattlong);
 
     @GET("/api/location/{id}")
     Observable<Forecast> getForecastData(@Path("id") int id);

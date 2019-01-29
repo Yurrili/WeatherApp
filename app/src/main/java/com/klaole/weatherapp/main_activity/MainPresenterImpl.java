@@ -20,8 +20,8 @@ public class MainPresenterImpl implements MainContract.Presenter,
     private MainContract.GetForecastInteractor getForecastInteractor;
     private DateProvider dateProvider;
 
-    private int locationId = 523920;
 
+    private int locationId;
 
     @Inject
     public MainPresenterImpl(DateProvider dateProvider, MainContract.MainView mainView, MainContract.Fragment fragment, MainContract.GetForecastInteractor getForecastInteractor) {
@@ -35,19 +35,8 @@ public class MainPresenterImpl implements MainContract.Presenter,
     public void onDestroy() {
 
         mainView = null;
-
     }
 
-    @Override
-    public void onRefreshButtonClick() {
-
-        if (mainView != null) {
-            mainView.showProgress();
-        }
-
-        requestDataFromServer();
-
-    }
 
     @Override
     public void requestDataFromServer() {
@@ -56,14 +45,19 @@ public class MainPresenterImpl implements MainContract.Presenter,
             mainView.showProgress();
         }
 
+
         Log.i("Presenter", String.format("Call requestDataFromServer - location %1d", locationId));
         getForecastInteractor.get7daysForecast(locationId, dateProvider.getListOfDates(), this);
     }
 
     @Override
-    public void searchLocation(String name) {
+    public void searchLocation(double latitude, double longitude) {
 
-        getForecastInteractor.getLocationSearch(name, this);
+        if (mainView != null) {
+            mainView.showProgress();
+        }
+
+        getForecastInteractor.getLocationSearch(latitude, longitude, this);
     }
 
 
@@ -86,6 +80,8 @@ public class MainPresenterImpl implements MainContract.Presenter,
 
     @Override
     public void onFinishedSearch(List<LocationSearch> locationSearch) {
+        locationId = locationSearch.get(0).getWoeid();
+        Log.i("LocationSearch", "Name " + locationSearch.get(0).getTitle());
         if (mainView != null) {
             requestDataFromServer();
             mainView.hideProgress();

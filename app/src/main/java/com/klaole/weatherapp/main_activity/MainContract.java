@@ -16,11 +16,9 @@ public interface MainContract {
 
         void onDestroy();
 
-        void onRefreshButtonClick();
-
         void requestDataFromServer();
 
-        void searchLocation(String name);
+        void searchLocation(double latitude, double longitude);
     }
 
     /**
@@ -36,7 +34,6 @@ public interface MainContract {
         void setDataToRecyclerView(List<ConsolidatedWeather> forecasts);
 
         void onResponseFailure(Throwable throwable);
-
 
     }
 
@@ -69,7 +66,7 @@ public interface MainContract {
 
         void getForecastArrayList(int id, OnFinishedListener onFinishedListener);
 
-        void getLocationSearch(String name, OnFinishedSearchListener onFinishedListener);
+        void getLocationSearch(double latitude, double longitude, OnFinishedSearchListener onFinishedListener);
 
         void get7daysForecast(int id, List<String> date, OnFinishedForecastListener onFinishedListener);
 

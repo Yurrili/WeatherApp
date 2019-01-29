@@ -24,7 +24,7 @@ public class DateProviderImpl implements DateProvider {
 
 
     @Override
-    public String getFormatedTodayDate() {
+    public String getFormattedTodayDate() {
         Date date = new Date();
         return format.format(date);
     }
@@ -33,7 +33,7 @@ public class DateProviderImpl implements DateProvider {
     public List<String> getListOfDates() {
         Date date = new Date();
         List<String> list = new ArrayList<>();
-        list.add(getFormatedTodayDate());
+        list.add(getFormattedTodayDate());
         for (int i = 0; i < DAYS_IN_WEEK - 1; i++) {
             date = addDays(date, 1);
             list.add(format.format(date));

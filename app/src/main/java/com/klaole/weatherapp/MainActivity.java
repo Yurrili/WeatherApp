@@ -1,6 +1,10 @@
 package com.klaole.weatherapp;
 
-import android.net.Uri;
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -22,13 +26,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MainContract.MainView, TodaysWeatherFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MainContract.MainView {
 
 
     @BindView(R.id.recycler_view_forecast_list)
@@ -46,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     private TodaysWeatherFragment fragment;
 
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,10 +67,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         initFragmentView();
         initializeRecyclerView();
         initProgressBar();
-
         presenter = new MainPresenterImpl(dateProvider, this, fragment, forecastInteractor);
-
-        presenter.requestDataFromServer();
+        checkPermission();
 
     }
 
@@ -103,6 +111,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         this.addContentView(relativeLayout, params);
     }
 
+    public void showAlertDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.title_location_permission)
+                .setMessage(R.string.text_location_permission)
+                .setPositiveButton(R.string.ok, (dialogInterface, i) ->
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_LOCATION))
+                .create()
+                .show();
+    }
+
 
     @Override
     public void showProgress() {
@@ -130,6 +150,26 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     }
 
 
+    public void checkPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                showAlertDialog();
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+        } else {
+            getLocation();
+        }
+    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -137,8 +177,38 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     }
 
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void getLocation() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+
+            presenter.searchLocation(latitude, longitude);
+
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+
+                } else {
+                    showAlertDialog();
+                }
+            }
+
+        }
     }
 }

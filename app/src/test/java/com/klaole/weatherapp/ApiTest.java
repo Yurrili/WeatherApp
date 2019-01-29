@@ -34,6 +34,7 @@ public class ApiTest {
 
     private static final int testId = 523920;
     private static final String testCity = "Warsaw";
+    private static final String longlatCity = "19.9143558,50.0282059";
     private static final List<String> testDates = Arrays.asList("2019/1/27", "2019/1/26", "2019/1/25", "2019/1/24", "2019/1/23", "2019/1/22", "2019/1/21");
 
     @BeforeClass
@@ -63,7 +64,7 @@ public class ApiTest {
 
         GetForecastDataService apiEndpoints = RetrofitInstance.getRetrofitInstance().create(GetForecastDataService.class);
 
-        Observable<List<LocationSearch>> call = apiEndpoints.getLocationSearch(testCity);
+        Observable<List<LocationSearch>> call = apiEndpoints.getLocationSearch(longlatCity);
 
         call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
