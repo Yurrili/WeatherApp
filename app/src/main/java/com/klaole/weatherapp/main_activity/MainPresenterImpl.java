@@ -21,7 +21,7 @@ public class MainPresenterImpl implements MainContract.Presenter,
     private DateProvider dateProvider;
 
 
-    private int locationId;
+    private LocationSearch location;
 
     @Inject
     public MainPresenterImpl(DateProvider dateProvider, MainContract.MainView mainView, MainContract.Fragment fragment, MainContract.GetForecastInteractor getForecastInteractor) {
@@ -46,8 +46,8 @@ public class MainPresenterImpl implements MainContract.Presenter,
         }
 
 
-        Log.i("Presenter", String.format("Call requestDataFromServer - location %1d", locationId));
-        getForecastInteractor.get7daysForecast(locationId, dateProvider.getListOfDates(), this);
+        Log.i("Presenter", String.format("Call requestDataFromServer - location %1d", location.getWoeid()));
+        getForecastInteractor.get7daysForecast(location.getWoeid(), dateProvider.getListOfDates(), this);
     }
 
     @Override
@@ -80,12 +80,10 @@ public class MainPresenterImpl implements MainContract.Presenter,
 
     @Override
     public void onFinishedSearch(List<LocationSearch> locationSearch) {
-        locationId = locationSearch.get(0).getWoeid();
+        location = locationSearch.get(0);
         Log.i("LocationSearch", "Name " + locationSearch.get(0).getTitle());
-        if (mainView != null) {
-            requestDataFromServer();
-            mainView.hideProgress();
-        }
+        requestDataFromServer();
+
     }
 
     @Override
@@ -101,7 +99,7 @@ public class MainPresenterImpl implements MainContract.Presenter,
         if (mainView != null) {
             Log.i("Presenter", String.format("Set data for recycler, size() = %1d", forecast.size()));
             List<ConsolidatedWeather> list = new ArrayList<>(forecast.values());
-            mainFragment.setData(list.get(0));
+            mainFragment.setData(location.getTitle(), list.get(0));
             mainView.setDataToRecyclerView(list.subList(1, list.size()));
             mainView.hideProgress();
         }

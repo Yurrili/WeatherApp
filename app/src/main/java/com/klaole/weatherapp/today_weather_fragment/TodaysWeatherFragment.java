@@ -28,6 +28,9 @@ public class TodaysWeatherFragment extends Fragment implements MainContract.Frag
     @BindView(R.id.tv_temp)
     TextView tempTextView;
 
+    @BindView(R.id.tv_location)
+    TextView locationTextView;
+
     @BindString(R.string.temp_formater)
     String tempFormat;
 
@@ -69,10 +72,11 @@ public class TodaysWeatherFragment extends Fragment implements MainContract.Frag
     }
 
     @Override
-    public void setData(ConsolidatedWeather consolidatedWeather) {
+    public void setData(String name, ConsolidatedWeather consolidatedWeather) {
         Drawable drawable = imageProvider.getWeatherIcon(consolidatedWeather.getWeatherStateAbbr());
         imageView.setImageDrawable(drawable);
         tempTextView.setText(String.format(tempFormat, consolidatedWeather.getTheTemp()));
+        locationTextView.setText(name);
     }
 
 }

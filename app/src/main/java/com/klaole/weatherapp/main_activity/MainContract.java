@@ -38,7 +38,7 @@ public interface MainContract {
     }
 
     interface Fragment {
-        void setData(ConsolidatedWeather consolidatedWeather);
+        void setData(String location, ConsolidatedWeather consolidatedWeather);
     }
 
     /**
