@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -182,12 +183,33 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-            double longitude = location.getLongitude();
-            double latitude = location.getLatitude();
+            List<String> providers = lm.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers) {
+                Location l = lm.getLastKnownLocation(provider);
+                if (l == null) {
+                    continue;
+                }
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    bestLocation = l;
+                    Log.i("Location", "Found best last known location");
+                }
+            }
 
-            presenter.searchLocation(latitude, longitude);
+            if (bestLocation != null) {
+                double longitude = bestLocation.getLongitude();
+                double latitude = bestLocation.getLatitude();
+
+                Log.i("Location", "Longitude: " + longitude);
+                Log.i("Location", "Latitude: " + latitude);
+
+                presenter.searchLocation(latitude, longitude);
+            } else {
+                Toast.makeText(this, getString(R.string.toast_couldnt_find_location),
+                        Toast.LENGTH_SHORT).show();
+                presenter.searchLocation(19.9143558, 50.0282059);
+            }
 
         }
     }
@@ -203,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getLocation();
-
                 } else {
                     showAlertDialog();
                 }

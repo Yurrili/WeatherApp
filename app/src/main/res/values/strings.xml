@@ -5,4 +5,5 @@
     <string name="title_location_permission">Location Permission</string>
     <string name="ok">OK</string>
     <string name="text_location_permission">Please provide location permission</string>
+    <string name="toast_couldnt_find_location">Couldn\'t find last known locaiton</string>
 </resources>
