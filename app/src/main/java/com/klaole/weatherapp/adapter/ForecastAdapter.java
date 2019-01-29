@@ -2,9 +2,11 @@ package com.klaole.weatherapp.adapter;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.klaole.weatherapp.R;
@@ -13,12 +15,16 @@ import com.klaole.weatherapp.models.ConsolidatedWeather;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.WeatherViewHolder> {
 
     private List<ConsolidatedWeather> dataList;
+    private ImageProvider imageProvider;
 
-    public ForecastAdapter(List<ConsolidatedWeather> dataList) {
+    public ForecastAdapter(ImageProvider imageProvider, List<ConsolidatedWeather> dataList) {
+        this.imageProvider = imageProvider;
         this.dataList = dataList;
     }
 
@@ -32,7 +38,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
 
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        holder.txtWeatherState.setText(dataList.get(position).getWeatherStateAbbr());
+        holder.txtWeatherDate.setText(dataList.get(position).getApplicableDate());
+        Drawable drawable = imageProvider.getWeatherIcon(dataList.get(position).getWeatherStateAbbr());
+        holder.imgWeatherIcon.setImageDrawable(drawable);
     }
 
     @Override
@@ -42,11 +50,15 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
 
     class WeatherViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtWeatherState, txtDate;
+        @BindView(R.id.tv_weather_date)
+        TextView txtWeatherDate;
+
+        @BindView(R.id.iv_weather_icon)
+        ImageView imgWeatherIcon;
 
         WeatherViewHolder(View itemView) {
             super(itemView);
-            txtWeatherState = itemView.findViewById(R.id.tv_WeatherState);
+            ButterKnife.bind(this, itemView);
 
         }
     }

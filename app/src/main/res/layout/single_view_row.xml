@@ -2,16 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <!--<androidx.appcompat.widget.AppCompatImageView-->
+    <!--android:id="@+id/iv_weather_icon"-->
+    <!--android:layout_width="45dp"-->
+    <!--android:layout_height="45dp"-->
+    <!--android:background="@drawable/ic_c"-->
+    <!--android:padding="10dp" />-->
 
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
+        android:id="@+id/iv_weather_icon"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:src="@drawable/ic_c" />
 
     <TextView
-        android:id="@+id/tv_WeatherState"
+        android:id="@+id/tv_weather_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"

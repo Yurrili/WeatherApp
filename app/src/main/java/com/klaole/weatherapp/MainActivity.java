@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.klaole.weatherapp.adapter.ForecastAdapter;
+import com.klaole.weatherapp.adapter.ImageProvider;
 import com.klaole.weatherapp.main_activity.DateProviderImpl;
 import com.klaole.weatherapp.main_activity.GetForecastInteractorImpl;
 import com.klaole.weatherapp.main_activity.MainContract;
@@ -19,18 +20,23 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MainContract.MainView {
 
-    private ProgressBar progressBar;
-    private RecyclerView recyclerView;
 
+    @BindView(R.id.recycler_view_forecast_list)
+    RecyclerView recyclerView;
+
+    private ProgressBar progressBar;
     private MainContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         initializeRecyclerView();
         initProgressBar();
         presenter = new MainPresenterImpl(new DateProviderImpl(MainActivity.this), this, new GetForecastInteractorImpl());
@@ -42,8 +48,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
      * Initializing Toolbar and RecyclerView
      */
     private void initializeRecyclerView() {
-
-        recyclerView = findViewById(R.id.recycler_view_forecast_list);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     @Override
     public void setDataToRecyclerView(List<ConsolidatedWeather> forecasts) {
-        ForecastAdapter adapter = new ForecastAdapter(forecasts);
+        ForecastAdapter adapter = new ForecastAdapter(new ImageProvider(this), forecasts);
         recyclerView.setAdapter(adapter);
         recyclerView.swapAdapter(adapter, true);
     }
