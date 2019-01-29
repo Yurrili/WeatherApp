@@ -37,6 +37,11 @@ public interface MainContract {
 
         void onResponseFailure(Throwable throwable);
 
+
+    }
+
+    interface Fragment {
+        void setData(ConsolidatedWeather consolidatedWeather);
     }
 
     /**

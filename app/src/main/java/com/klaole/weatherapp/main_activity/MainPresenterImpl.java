@@ -14,14 +14,16 @@ public class MainPresenterImpl implements MainContract.Presenter,
         MainContract.GetForecastInteractor.OnFinishedListener, MainContract.GetForecastInteractor.OnFinishedSearchListener, MainContract.GetForecastInteractor.OnFinishedForecastListener {
 
     private MainContract.MainView mainView;
+    private MainContract.Fragment mainFragment;
     private MainContract.GetForecastInteractor getForecastInteractor;
     private DateProvider dateProvider;
 
     private int locationId = 523920;
 
 
-    public MainPresenterImpl(DateProvider dateProvider, MainContract.MainView mainView, MainContract.GetForecastInteractor getForecastInteractor) {
+    public MainPresenterImpl(DateProvider dateProvider, MainContract.MainView mainView, MainContract.Fragment fragment, MainContract.GetForecastInteractor getForecastInteractor) {
         this.mainView = mainView;
+        this.mainFragment = fragment;
         this.getForecastInteractor = getForecastInteractor;
         this.dateProvider = dateProvider;
     }
@@ -46,6 +48,11 @@ public class MainPresenterImpl implements MainContract.Presenter,
 
     @Override
     public void requestDataFromServer() {
+
+        if (mainView != null) {
+            mainView.showProgress();
+        }
+
         Log.i("Presenter", String.format("Call requestDataFromServer - location %1d", locationId));
         getForecastInteractor.get7daysForecast(locationId, dateProvider.getListOfDates(), this);
     }
@@ -94,7 +101,9 @@ public class MainPresenterImpl implements MainContract.Presenter,
     public void onFinishedForecast(TreeMap<String, ConsolidatedWeather> forecast) {
         if (mainView != null) {
             Log.i("Presenter", String.format("Set data for recycler, size() = %1d", forecast.size()));
-            mainView.setDataToRecyclerView(new ArrayList<>(forecast.values()));
+            List<ConsolidatedWeather> list = new ArrayList<>(forecast.values());
+            mainFragment.setData(list.get(0));
+            mainView.setDataToRecyclerView(list.subList(1, list.size()));
             mainView.hideProgress();
         }
     }

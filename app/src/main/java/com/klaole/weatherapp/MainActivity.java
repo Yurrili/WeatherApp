@@ -1,5 +1,6 @@
 package com.klaole.weatherapp;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.klaole.weatherapp.main_activity.GetForecastInteractorImpl;
 import com.klaole.weatherapp.main_activity.MainContract;
 import com.klaole.weatherapp.main_activity.MainPresenterImpl;
 import com.klaole.weatherapp.models.ConsolidatedWeather;
+import com.klaole.weatherapp.today_weather_fragment.TodaysWeatherFragment;
+import com.klaole.weatherapp.util.ActivityUtils;
 
 import java.util.List;
 
@@ -23,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MainContract.MainView {
+public class MainActivity extends AppCompatActivity implements MainContract.MainView, TodaysWeatherFragment.OnFragmentInteractionListener {
 
 
     @BindView(R.id.recycler_view_forecast_list)
@@ -32,16 +35,33 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     private ProgressBar progressBar;
     private MainContract.Presenter presenter;
 
+    private TodaysWeatherFragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        initFragmentView();
         initializeRecyclerView();
         initProgressBar();
-        presenter = new MainPresenterImpl(new DateProviderImpl(MainActivity.this), this, new GetForecastInteractorImpl());
+
+        presenter = new MainPresenterImpl(new DateProviderImpl(MainActivity.this), this, fragment, new GetForecastInteractorImpl());
         presenter.requestDataFromServer();
 
+    }
+
+
+    private void initFragmentView() {
+        fragment =
+                (TodaysWeatherFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (fragment == null) {
+            // Create the fragment
+            fragment = TodaysWeatherFragment.newInstance();
+
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(), fragment, R.id.contentFrame);
+        }
     }
 
     /**
@@ -105,4 +125,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     }
 
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

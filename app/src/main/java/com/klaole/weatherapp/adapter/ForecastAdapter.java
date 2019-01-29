@@ -2,7 +2,6 @@ package com.klaole.weatherapp.adapter;
 
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import com.klaole.weatherapp.models.ConsolidatedWeather;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -38,9 +38,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
 
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        holder.txtWeatherDate.setText(dataList.get(position).getApplicableDate());
-        Drawable drawable = imageProvider.getWeatherIcon(dataList.get(position).getWeatherStateAbbr());
-        holder.imgWeatherIcon.setImageDrawable(drawable);
+        holder.setTxtWeatherDate(dataList.get(position).getApplicableDate());
+        holder.setTxtWeatherTemp(dataList.get(position).getTheTemp());
+        holder.setImageWeatherState(dataList.get(position).getWeatherStateAbbr());
     }
 
     @Override
@@ -53,13 +53,31 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         @BindView(R.id.tv_weather_date)
         TextView txtWeatherDate;
 
+        @BindView(R.id.tv_weather_temp)
+        TextView txtWeatherTemp;
+
         @BindView(R.id.iv_weather_icon)
         ImageView imgWeatherIcon;
+
+        @BindString(R.string.temp_formater)
+        String tempFormat;
 
         WeatherViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
+        }
+
+        void setTxtWeatherTemp(double temp) {
+            txtWeatherTemp.setText(String.format(tempFormat, temp));
+        }
+
+        void setTxtWeatherDate(String date) {
+            txtWeatherDate.setText(date);
+        }
+
+        void setImageWeatherState(String state) {
+            imgWeatherIcon.setImageDrawable(imageProvider.getWeatherIcon(state));
         }
     }
 }

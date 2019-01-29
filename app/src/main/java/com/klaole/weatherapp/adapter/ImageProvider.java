@@ -48,7 +48,7 @@ public class ImageProvider {
         Log.d("ImageProvider", "Butterknife init");
     }
 
-    Drawable getWeatherIcon(String weatherState) {
+    public Drawable getWeatherIcon(String weatherState) {
         switch (weatherState) {
             case CLEAR:
                 return c;
