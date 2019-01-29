@@ -10,8 +10,8 @@ import android.widget.Toast;
 
 import com.klaole.weatherapp.adapter.ForecastAdapter;
 import com.klaole.weatherapp.adapter.ImageProvider;
-import com.klaole.weatherapp.main_activity.DateProviderImpl;
-import com.klaole.weatherapp.main_activity.GetForecastInteractorImpl;
+import com.klaole.weatherapp.di.MyApp;
+import com.klaole.weatherapp.main_activity.DateProvider;
 import com.klaole.weatherapp.main_activity.MainContract;
 import com.klaole.weatherapp.main_activity.MainPresenterImpl;
 import com.klaole.weatherapp.models.ConsolidatedWeather;
@@ -19,6 +19,8 @@ import com.klaole.weatherapp.today_weather_fragment.TodaysWeatherFragment;
 import com.klaole.weatherapp.util.ActivityUtils;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,6 +35,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     RecyclerView recyclerView;
 
     private ProgressBar progressBar;
+
+    @Inject
+    MainContract.GetForecastInteractor forecastInteractor;
+
+    @Inject
+    DateProvider dateProvider;
+
     private MainContract.Presenter presenter;
 
     private TodaysWeatherFragment fragment;
@@ -42,19 +51,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        MyApp.app().forecastComponent().inject(this);
+
         initFragmentView();
         initializeRecyclerView();
         initProgressBar();
 
-        presenter = new MainPresenterImpl(new DateProviderImpl(MainActivity.this), this, fragment, new GetForecastInteractorImpl());
+        presenter = new MainPresenterImpl(dateProvider, this, fragment, forecastInteractor);
+
         presenter.requestDataFromServer();
 
     }
 
 
     private void initFragmentView() {
-        fragment =
-                (TodaysWeatherFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        fragment = (TodaysWeatherFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (fragment == null) {
             // Create the fragment
             fragment = TodaysWeatherFragment.newInstance();

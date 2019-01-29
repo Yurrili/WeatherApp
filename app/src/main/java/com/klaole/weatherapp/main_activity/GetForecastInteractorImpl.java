@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -20,16 +22,19 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GetForecastInteractorImpl implements MainContract.GetForecastInteractor {
 
-    private LocationSearch location;
+    @Inject
+    public GetForecastInteractorImpl() {
+    }
+
 
     @Override
-    public void getForecastArrayList(final OnFinishedListener onFinishedListener) {
+    public void getForecastArrayList(int id, final OnFinishedListener onFinishedListener) {
 
 
         /** Create handle for the RetrofitInstance interface*/
         GetForecastDataService service = RetrofitInstance.getRetrofitInstance().create(GetForecastDataService.class);
 
-        Observable<Forecast> call = service.getForecastData(location.getWoeid());
+        Observable<Forecast> call = service.getForecastData(id);
 
         call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

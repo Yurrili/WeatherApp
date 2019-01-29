@@ -67,7 +67,7 @@ public interface MainContract {
             void onFailedForecast(Throwable t);
         }
 
-        void getForecastArrayList(OnFinishedListener onFinishedListener);
+        void getForecastArrayList(int id, OnFinishedListener onFinishedListener);
 
         void getLocationSearch(String name, OnFinishedSearchListener onFinishedListener);
 

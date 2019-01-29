@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import javax.inject.Inject;
+
 public class MainPresenterImpl implements MainContract.Presenter,
         MainContract.GetForecastInteractor.OnFinishedListener, MainContract.GetForecastInteractor.OnFinishedSearchListener, MainContract.GetForecastInteractor.OnFinishedForecastListener {
 
@@ -21,6 +23,7 @@ public class MainPresenterImpl implements MainContract.Presenter,
     private int locationId = 523920;
 
 
+    @Inject
     public MainPresenterImpl(DateProvider dateProvider, MainContract.MainView mainView, MainContract.Fragment fragment, MainContract.GetForecastInteractor getForecastInteractor) {
         this.mainView = mainView;
         this.mainFragment = fragment;
